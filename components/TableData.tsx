@@ -1,16 +1,20 @@
 import { Table } from "@mantine/core";
-import data from "../fake.json";
-import { getAllStudents } from "@/services/studentServices";
-import { useEffect } from "react";
 
-export default function TableData() {
-  const elements = data.data;
+
+import Link from "next/link";
+import { IStudentReturn } from "@/types";
+
+export default function TableData({data} : {data:IStudentReturn[]}) {
+  const elements = data;
   const rows = elements.map((element) => (
     <tr key={element.name}>
       <td>{element.name}</td>
-      <td>{element.completed}</td>
+      <td>{element.yearCompleted}</td>
       <td>{element.activePhone}</td>
-      <td>{element.honor}</td>
+      <td className="phone:hidden">{element.honors}</td>
+      <td>
+        <Link href={`/students/${element.slug}`} className="text-indigo-500 underline">View</Link>
+      </td>
     </tr>
   ));
 
@@ -23,8 +27,9 @@ export default function TableData() {
         <tr>
           <th>Name</th>
           <th>Completed</th>
-          <th>Active Phone</th>
+          <th>Phone</th>
           <th>Honor</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>{rows}</tbody>

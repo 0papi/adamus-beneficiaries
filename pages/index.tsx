@@ -4,14 +4,24 @@ import { getDocs, collection } from "firebase/firestore";
 import { db } from "@/FirebaseServices";
 import { Modal, Input, Checkbox } from "@mantine/core";
 import TableData from "@/components/TableData";
-import { createStudent, getAllStudents, IStudentData } from "@/services/studentServices";
+import { createStudent, IStudentData } from "@/services/studentServices";
 import ActivityIndicator from "@/components/ActivityIndicator";
+import { IStudentReturn } from "@/types";
+
+
+const NOTES = ['You are a graduate', 'You were a beneficiary of the Adamus Scholarship Program']
 
 export default function Home() {
   const [opened, { open, close }] = useDisclosure(false);
   const [loading, setLoading] = useState(false)
 
-  const [studentsList, setStudentsList] = useState<IStudentData[]>([])
+  const [studentsList, setStudentsList] = useState<any[]>([])
+  const [refreshData, setRefreshData] = useState(false)
+
+  // Call this function whenever you need to refresh the data
+const handleRefreshData = () => {
+  setRefreshData((prev) => !prev);
+};
 
 
   const [studentData, setStudentData] = useState({
@@ -23,27 +33,25 @@ export default function Home() {
     schoolAttended: ""
   })
 
-  const getStudentsList = useCallback(() => {
-    const getStudents = async() => {
+  const getStudentsList = useCallback( async() => {
       const querySnapshot = await getDocs(collection(db, "students"));
+      const studentData : any[] = []
       querySnapshot.forEach((doc) => {
-            const studentData = []
-            studentData.push(doc.data())
-
-            
-        setStudentsList(studentData as IStudentData[])
-
-        console.log(studentsList)
+            studentData.push({
+              slug: doc.id,
+              ...doc.data()
+            })
       });
-    }
+      setStudentsList(studentData)
+        
   }, [])
 
   
   useEffect(() => {
     (async () => {
-      await getStudentsList();
+     await getStudentsList();
     })();
-  }, [])
+  }, [getStudentsList, refreshData])
 
   const handleStudentCreate = async (e : React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -60,7 +68,7 @@ export default function Home() {
        await createStudent({...studentData})
        setLoading(false)
        close()
-       await getAllStudents()
+       handleRefreshData()
      } catch (error) {
       close()
       setLoading(false)
@@ -85,7 +93,24 @@ export default function Home() {
         </button>
       </div>
 
-      <TableData />
+      <TableData data={studentsList as IStudentReturn[]}/>
+
+      <div className="mt-8 border-t pt-4 border-gray-400">
+        <h2 className="font-bold text-lg mb-2">Please take note of the following before adding your data</h2>
+
+        {
+          NOTES.map((note) => (
+            <div key={note} className="flex items-center space-x-4 my-1">
+               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+
+                <p>{note}</p>
+            </div>
+          ))
+        }
+      </div>
+
 
       <Modal
         opened={opened}
@@ -171,7 +196,7 @@ export default function Home() {
           </div>
 
           <div>
-            <Checkbox label="I agree that my data is accurate" checked />
+            <Checkbox label="I agree that my data is accurate" checked readOnly/>
           </div>
 
           <button className="bg-indigo-500 flex items-center justify-center px-4 py-2 text-white rounded-md w-full" type="submit">
