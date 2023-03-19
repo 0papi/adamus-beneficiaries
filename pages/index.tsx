@@ -99,10 +99,10 @@ const handleRefreshData = () => {
       }
 
       {
-        studentsList.length === 0 && <Filler onClick={open}/>
+        studentsList.length === 0 && <Filler onClick={open} subTitle="There are no beneficiaries in this repository. Add yours" buttonTitle="Add your name"/>
       }
 
-      <TableData data={studentsList as IStudentReturn[]}/>
+     {studentsList.length !== 0 &&  <TableData data={studentsList as IStudentReturn[]}/>}
 
       <div className="mt-8 border-t pt-4 border-gray-400">
         <h2 className="font-bold text-lg mb-2">Please take note of the following before adding your data</h2>

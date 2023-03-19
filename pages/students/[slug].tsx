@@ -3,6 +3,7 @@ import { useCallback, useState, useEffect } from "react";
 import { getDoc, doc, collection } from "firebase/firestore";
 import { db } from "@/FirebaseServices";
 import { IStudentData } from "@/services/studentServices";
+import { Filler } from "@/components/Filler";
 
 
 export default function SingleStudentPage(){
@@ -47,7 +48,9 @@ export default function SingleStudentPage(){
         <div className="py-4">
             
             <h2 className="pb-8 border-b border-gray-400 font-bold text-lg mb-4">{`${formatName(slug && slug)}'s`} Details</h2>
-            {!studentsList && notfound && <h2>Beneficiary is not in the repository</h2>}
+
+
+            {!studentsList && notfound && <Filler onClick={() => router.push('/')} subTitle={`There is no data for ${formatName(slug && slug) }`} buttonTitle={'Go back to homepage'}/>}
 
             {studentsList && !notfound &&  <ul className="flex items-start flex-col space-y-2">
                     <li className="flex items-center space-x-4">
