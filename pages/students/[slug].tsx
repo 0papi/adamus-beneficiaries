@@ -4,26 +4,33 @@ import { getDoc, doc, collection } from "firebase/firestore";
 import { db } from "@/FirebaseServices";
 import { IStudentData } from "@/services/studentServices";
 import { Filler } from "@/components/Filler";
+import ActivityIndicator from "@/components/ActivityIndicator";
 
 
 export default function SingleStudentPage(){
   const [studentsList, setStudentsList] = useState<IStudentData>()
   const [notfound, setNotFound] = useState(false)
+  const [studentLoading, setStudentLoading] = useState(false)
+
   const router = useRouter()
+
   const slug = router.query?.slug as string
 
 
 
 
     const getStudentsList = useCallback( async() => {
+        setStudentLoading(true)
         const docRef = doc(db, "students", router.query?.slug as string);
         const docSnap = await getDoc(docRef);
 
         if(docSnap.exists()){
             console.log('documentData', docSnap.data())
             setStudentsList(docSnap.data() as IStudentData)
+            setStudentLoading(false)
         } else {
             setNotFound(true)
+            setStudentLoading(false)
         }
     }, [router.query?.slug])
   
@@ -31,6 +38,7 @@ export default function SingleStudentPage(){
     useEffect(() => {
       (async () => {
        await getStudentsList();
+       setStudentLoading(false)
       })();
     }, [getStudentsList])
 
@@ -48,6 +56,10 @@ export default function SingleStudentPage(){
         <div className="py-4">
             
             <h2 className="pb-8 border-b border-gray-400 font-bold text-lg mb-4">{`${formatName(slug && slug)}'s`} Details</h2>
+
+            {
+                studentLoading && <ActivityIndicator />
+            }
 
 
             {!studentsList && notfound && <Filler onClick={() => router.push('/')} subTitle={`There is no data for ${formatName(slug && slug) }`} buttonTitle={'Go back to homepage'}/>}

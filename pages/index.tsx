@@ -15,6 +15,7 @@ const NOTES = ['You are a graduate', 'You were a beneficiary of the Adamus Schol
 export default function Home() {
   const [opened, { open, close }] = useDisclosure(false);
   const [loading, setLoading] = useState(false)
+  const [studentLoading, setStudentLoading] = useState(false)
 
   const [studentsList, setStudentsList] = useState<any[]>([])
   const [refreshData, setRefreshData] = useState(false)
@@ -35,6 +36,7 @@ const handleRefreshData = () => {
   })
 
   const getStudentsList = useCallback( async() => {
+    setStudentLoading(true)
       const querySnapshot = await getDocs(collection(db, "students"));
       const studentData : any[] = []
       querySnapshot.forEach((doc) => {
@@ -44,6 +46,8 @@ const handleRefreshData = () => {
             })
       });
       setStudentsList(studentData)
+
+      setStudentLoading(false)
         
   }, [])
 
@@ -51,6 +55,7 @@ const handleRefreshData = () => {
   useEffect(() => {
     (async () => {
      await getStudentsList();
+     setStudentLoading(false)
     })();
   }, [getStudentsList, refreshData])
 
@@ -95,11 +100,11 @@ const handleRefreshData = () => {
       </div>
 
       {
-        loading && <ActivityIndicator />
+        studentLoading && <ActivityIndicator />
       }
 
       {
-        studentsList.length === 0 && <Filler onClick={open} subTitle="There are no beneficiaries in this repository" buttonTitle="Add your name"/>
+        studentsList.length === 0 && !studentLoading  && <Filler onClick={open} subTitle="There are no beneficiaries in this repository" buttonTitle="Add your name"/>
       }
 
      {studentsList.length !== 0 &&  <TableData data={studentsList as IStudentReturn[]}/>}
@@ -119,6 +124,8 @@ const handleRefreshData = () => {
           ))
         }
       </div>
+
+
 
 
       <Modal

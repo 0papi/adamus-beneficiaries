@@ -1,19 +1,16 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
-const firebaseConfig = {
-  apiKey: "AIzaSyBMG0_WkyNrzxQR5V_61EtENe-R1LH_5as",
-  authDomain: "adamus-beneficiaries.firebaseapp.com",
-  projectId: "adamus-beneficiaries",
-  storageBucket: "adamus-beneficiaries.appspot.com",
-  messagingSenderId: "175408638830",
-  appId: "1:175408638830:web:0bf38e07a07680c6d46f7f",
-  measurementId: "G-4061N71JH9",
-};
+const firebase = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+}
 
 
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-
+const app = initializeApp(firebase);
 export const db = getFirestore(app);
