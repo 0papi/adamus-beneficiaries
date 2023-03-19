@@ -9,8 +9,8 @@ export default function TableData({data} : {data:IStudentReturn[]}) {
   const rows = elements.map((element) => (
     <tr key={element.name}>
       <td>{element.name}</td>
-      <td>{element.yearCompleted}</td>
-      <td>{element.activePhone}</td>
+      <td className="phone:hidden">{element.yearCompleted}</td>
+      <td className="phone:hidden">{element.activePhone}</td>
       <td className="phone:hidden">{element.honors}</td>
       <td>
         <Link href={`/students/${element.slug}`} className="text-indigo-500 underline">View</Link>
@@ -26,9 +26,9 @@ export default function TableData({data} : {data:IStudentReturn[]}) {
       <thead>
         <tr>
           <th>Name</th>
-          <th>Completed</th>
-          <th>Phone</th>
-          <th>Honor</th>
+          <th className="phone:hidden">Completed</th>
+          <th className="phone:hidden">Phone</th>
+          <th className="phone:hidden">Honor</th>
           <th>Action</th>
         </tr>
       </thead>
