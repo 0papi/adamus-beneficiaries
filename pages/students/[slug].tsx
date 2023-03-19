@@ -70,6 +70,10 @@ export default function SingleStudentPage(){
                         <span>{studentsList?.name}</span>
                     </li>
                     <li className="flex items-center space-x-4">
+                        <span className="font-bold">Institution Attended:</span>
+                        <span>{studentsList?.schoolAttended}</span>
+                    </li>
+                    <li className="flex items-center space-x-4">
                         <span className="font-bold">Phone:</span>
                         <span>{studentsList?.activePhone}</span>
                     </li>
