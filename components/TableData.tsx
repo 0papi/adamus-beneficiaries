@@ -1,5 +1,7 @@
 import { Table } from "@mantine/core";
 import data from "../fake.json";
+import { getAllStudents } from "@/services/studentServices";
+import { useEffect } from "react";
 
 export default function TableData() {
   const elements = data.data;
@@ -11,6 +13,9 @@ export default function TableData() {
       <td>{element.honor}</td>
     </tr>
   ));
+
+
+
 
   return (
     <Table>
