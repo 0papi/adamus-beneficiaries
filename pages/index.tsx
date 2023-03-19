@@ -99,7 +99,7 @@ const handleRefreshData = () => {
       }
 
       {
-        studentsList.length === 0 && <Filler onClick={open} subTitle="There are no beneficiaries in this repository. Add yours" buttonTitle="Add your name"/>
+        studentsList.length === 0 && <Filler onClick={open} subTitle="There are no beneficiaries in this repository" buttonTitle="Add your name"/>
       }
 
      {studentsList.length !== 0 &&  <TableData data={studentsList as IStudentReturn[]}/>}
