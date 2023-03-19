@@ -8,9 +8,8 @@ import { IStudentData } from "@/services/studentServices";
 export default function SingleStudentPage(){
   const [studentsList, setStudentsList] = useState<IStudentData>()
   const [notfound, setNotFound] = useState(false)
-  
   const router = useRouter()
-  console.log(router.query)
+  const slug = router.query?.slug as string
 
 
 
@@ -25,7 +24,7 @@ export default function SingleStudentPage(){
         } else {
             setNotFound(true)
         }
-    }, [])
+    }, [router.query?.slug])
   
     
     useEffect(() => {
@@ -34,10 +33,20 @@ export default function SingleStudentPage(){
       })();
     }, [getStudentsList])
 
+    
+    function formatName(name:string) {
+        if(name){
+        const parts = name.split('-');
+        const firstName = parts[1].charAt(0).toUpperCase() + parts[1].slice(1);
+        const lastName = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
+        return `${firstName} ${lastName}`;
+        }
+    }
+
     return (
         <div className="py-4">
             
-            <h2 className="pb-8 border-b border-gray-400 font-bold text-lg mb-4">{`${formatName(router.query?.slug as string)}'s`} Details</h2>
+            <h2 className="pb-8 border-b border-gray-400 font-bold text-lg mb-4">{`${formatName(slug && slug)}'s`} Details</h2>
             {!studentsList && notfound && <h2>Beneficiary is not in the repository</h2>}
 
             {studentsList && !notfound &&  <ul className="flex items-start flex-col space-y-2">
@@ -74,10 +83,4 @@ export default function SingleStudentPage(){
     )
 }
 
-function formatName(name:string) {
-    const parts = name.split('-');
-    const firstName = parts[1].charAt(0).toUpperCase() + parts[1].slice(1);
-    const lastName = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
-    return `${firstName} ${lastName}`;
-  }
   
